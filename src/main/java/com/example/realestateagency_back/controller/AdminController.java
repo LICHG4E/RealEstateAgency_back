@@ -51,4 +51,18 @@ public class AdminController {
         adminService.deleteAdmin(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/setup/first-admin")
+    public ResponseEntity<AdminDTO> createFirstAdmin(
+            @Valid @RequestBody AdminDTO adminDTO,
+            @RequestParam String password) {
+        // Check if any admin exists
+        if (adminService.countAdmins() > 0) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(null); // Or throw an exception
+        }
+
+        AdminDTO createdAdmin = adminService.createAdmin(adminDTO, password);
+        return new ResponseEntity<>(createdAdmin, HttpStatus.CREATED);
+    }
 }

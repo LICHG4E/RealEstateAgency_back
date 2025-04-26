@@ -20,23 +20,23 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double area; // corresponds to 'superficie' in diagram
-    private Integer rooms; // corresponds to 'nombre_pieces' in diagram
-    private String location; // corresponds to 'localisation' in diagram
-    private BigDecimal price; // corresponds to 'prix' in diagram
+    private Double area;
+    private Integer rooms;
+    private String location;
+    private BigDecimal price;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String contactInfo; // corresponds to 'contact' in diagram
+    private String contactInfo;
 
-    private String status; // 'statut' in diagram
-
-    @Enumerated(EnumType.STRING)
-    private PropertyType type; // corresponds to 'type_bien' in diagram
+    private String status;
 
     @Enumerated(EnumType.STRING)
-    private ListingType listingType; // additional field not in diagram
+    private PropertyType type;
+
+    @Enumerated(EnumType.STRING)
+    private ListingType listingType;
 
     @ManyToOne
     @JoinColumn(name = "admin_id")
@@ -52,10 +52,10 @@ public class Property {
     private List<Favorite> favorites = new ArrayList<>();
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt; // for auditing
+    private LocalDateTime createdAt;
 
     @Column(name = "publication_date")
-    private LocalDateTime publicationDate; // corresponds to 'date_publication' in diagram
+    private LocalDateTime publicationDate;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

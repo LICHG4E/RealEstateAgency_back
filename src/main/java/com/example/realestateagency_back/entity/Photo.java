@@ -18,10 +18,10 @@ public class Photo {
     private Long id;
 
     @Column(name = "url")
-    private String url; // corresponds to 'url_photo' in diagram
+    private String url;
 
     @Column(name = "order_num")
-    private Integer order; // corresponds to 'ordre' in diagram
+    private Integer order;
 
     @ManyToOne
     @JoinColumn(name = "property_id")

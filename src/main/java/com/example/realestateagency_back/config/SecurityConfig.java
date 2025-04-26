@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**", "/api/properties/public/**", "/api/users/register").permitAll()
+                        .requestMatchers("/api/admin/setup/first-admin").permitAll()  // Add this line
                         .requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/api/photos/download/**").permitAll()
                         .anyRequest().authenticated()

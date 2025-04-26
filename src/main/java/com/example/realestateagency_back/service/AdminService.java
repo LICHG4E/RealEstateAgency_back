@@ -73,4 +73,8 @@ public class AdminService {
                 .createdAt(admin.getCreatedAt())
                 .build();
     }
+
+    public int countAdmins() {
+        return (int) adminRepository.count();
+    }
 }

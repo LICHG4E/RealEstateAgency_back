@@ -15,4 +15,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByUserIdAndPropertyId(Long userId, Long propertyId);
 
     List<Message> findByPropertyIdOrderBySentDateDesc(Long propertyId);
+
+    void deleteByUserIdAndPropertyId(Long userId, Long propertyId);
 }

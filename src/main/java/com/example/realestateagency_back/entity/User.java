@@ -18,16 +18,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
-    private String username; // corresponds to 'nom' in diagram
+    private String email;
 
     @Column(nullable = false)
     private String password;
 
+    private String username;
+
     private String fullName;
-    private String email;
-    private String telephone; // changed from phoneNumber to match diagram
+
+    private String telephone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
@@ -36,7 +37,7 @@ public class User {
     private List<Favorite> favorites = new ArrayList<>();
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt; // corresponds to 'date_inscription' in diagram
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {

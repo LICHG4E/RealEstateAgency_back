@@ -20,20 +20,20 @@ public class Admin {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username; // corresponds to 'nom' in diagram
-
-    @Column(nullable = false)
-    private String password; // corresponds to 'mot_de_passe' in diagram
-
     private String email;
 
-    private String status; // 'statut' in diagram
+    @Column(nullable = false)
+    private String password;
+
+    private String username;
+
+    private String status;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Property> properties = new ArrayList<>();
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt; // corresponds to 'date_creation' in diagram
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {

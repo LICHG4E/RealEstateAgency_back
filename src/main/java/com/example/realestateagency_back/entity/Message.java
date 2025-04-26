@@ -18,7 +18,7 @@ public class Message {
     private Long id;
 
     @Column(columnDefinition = "TEXT")
-    private String content; // corresponds to 'contenu' in diagram
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -29,7 +29,7 @@ public class Message {
     private Property property;
 
     @Column(name = "sent_date")
-    private LocalDateTime sentDate; // corresponds to 'date_envoi' in diagram
+    private LocalDateTime sentDate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

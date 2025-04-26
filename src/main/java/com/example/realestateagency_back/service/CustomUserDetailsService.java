@@ -20,44 +20,44 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // First try to find admin
-        Admin admin = adminRepository.findByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // First try to find admin by email
+        Admin admin = adminRepository.findByEmail(email).orElse(null);
         if (admin != null) {
             return new org.springframework.security.core.userdetails.User(
-                    admin.getUsername(),
+                    admin.getEmail(),
                     admin.getPassword(),
                     new ArrayList<>()
             );
         }
 
-        // Then try to find user
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        // Then try to find user by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 new ArrayList<>()
         );
     }
 
-    public UserDetails loadUserByUsername(String username, String userType) throws UsernameNotFoundException {
+    public UserDetails loadUserByEmail(String email, String userType) throws UsernameNotFoundException {
         if ("ADMIN".equals(userType)) {
-            Admin admin = adminRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Admin not found with username: " + username));
+            Admin admin = adminRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Admin not found with email: " + email));
 
             return new org.springframework.security.core.userdetails.User(
-                    admin.getUsername(),
+                    admin.getEmail(),
                     admin.getPassword(),
                     new ArrayList<>()
             );
         } else {
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
             return new org.springframework.security.core.userdetails.User(
-                    user.getUsername(),
+                    user.getEmail(),
                     user.getPassword(),
                     new ArrayList<>()
             );

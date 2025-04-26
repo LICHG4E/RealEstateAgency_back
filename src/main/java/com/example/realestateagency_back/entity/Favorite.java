@@ -26,7 +26,7 @@ public class Favorite {
     private Property property;
 
     @Column(name = "date_added")
-    private LocalDateTime dateAdded; // corresponds to 'date_ajout' in diagram
+    private LocalDateTime dateAdded;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

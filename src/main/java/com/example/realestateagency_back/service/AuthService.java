@@ -27,16 +27,17 @@ public class AuthService {
 
     public AuthResponseDTO authenticateAdmin(AuthRequestDTO authRequestDTO) {
         try {
+            System.out.printf("Authenticating admin with email: %s%n", authRequestDTO.getEmail());
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
             );
 
-            Optional<Admin> admin = adminRepository.findByUsername(authRequestDTO.getUsername());
+            Optional<Admin> admin = adminRepository.findByEmail(authRequestDTO.getEmail());
             if (admin.isEmpty()) {
                 throw new RuntimeException("Admin not found");
             }
 
-            String jwt = jwtUtils.generateToken(authRequestDTO.getUsername(), "ADMIN");
+            String jwt = jwtUtils.generateToken(authRequestDTO.getEmail(), "ADMIN");
 
             return AuthResponseDTO.builder()
                     .token(jwt)
@@ -46,22 +47,22 @@ public class AuthService {
                     .userType("ADMIN")
                     .build();
         } catch (AuthenticationException e) {
-            throw new RuntimeException("Invalid username or password", e);
+            throw new RuntimeException("Invalid email or password", e);
         }
     }
 
     public AuthResponseDTO authenticateUser(AuthRequestDTO authRequestDTO) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword())
             );
 
-            Optional<User> user = userRepository.findByUsername(authRequestDTO.getUsername());
+            Optional<User> user = userRepository.findByEmail(authRequestDTO.getEmail());
             if (user.isEmpty()) {
                 throw new RuntimeException("User not found");
             }
 
-            String jwt = jwtUtils.generateToken(authRequestDTO.getUsername(), "USER");
+            String jwt = jwtUtils.generateToken(authRequestDTO.getEmail(), "USER");
 
             return AuthResponseDTO.builder()
                     .token(jwt)
@@ -71,14 +72,14 @@ public class AuthService {
                     .userType("USER")
                     .build();
         } catch (AuthenticationException e) {
-            throw new RuntimeException("Invalid username or password", e);
+            throw new RuntimeException("Invalid email or password", e);
         }
     }
 
-    public String determineUserType(String username) {
-        if (adminRepository.existsByUsername(username)) {
+    public String determineUserType(String email) {
+        if (adminRepository.existsByEmail(email)) {
             return "ADMIN";
-        } else if (userRepository.existsByUsername(username)) {
+        } else if (userRepository.existsByEmail(email)) {
             return "USER";
         }
         return null;
