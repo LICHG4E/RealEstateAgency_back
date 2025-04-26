@@ -53,4 +53,12 @@ public class MessageController {
         messageService.deleteMessage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user/{userId}/property/{propertyId}")
+    public ResponseEntity<List<MessageDTO>> getMessagesByUserAndPropertyId(
+            @PathVariable Long userId,
+            @PathVariable Long propertyId) {
+        List<MessageDTO> messages = messageService.getMessagesByUserAndPropertyId(userId, propertyId);
+        return ResponseEntity.ok(messages);
+    }
 }

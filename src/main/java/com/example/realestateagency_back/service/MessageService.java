@@ -88,4 +88,10 @@ public class MessageService {
                 .createdAt(message.getCreatedAt())
                 .build();
     }
+
+    public List<MessageDTO> getMessagesByUserAndPropertyId(Long userId, Long propertyId) {
+        return messageRepository.findByUserIdAndPropertyId(userId, propertyId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }

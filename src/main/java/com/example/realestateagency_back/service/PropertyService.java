@@ -24,6 +24,7 @@ public class PropertyService {
     private final PropertyRepository propertyRepository;
     private final AdminRepository adminRepository;
     private final PhotoRepository photoRepository;
+    private final FileStorageService fileStorageService;
 
     public List<PropertyDTO> getAllProperties() {
         return propertyRepository.findAll().stream()
@@ -96,20 +97,28 @@ public class PropertyService {
 
         return convertToDTO(updatedProperty);
     }
-
     @Transactional
     public void deleteProperty(Long id) {
         if (!propertyRepository.existsById(id)) {
             throw new ResourceNotFoundException("Property not found with id " + id);
         }
 
-        // Delete associated photos first
+        // Get all photos for this property
+        List<Photo> photos = photoRepository.findByPropertyIdOrderByOrderAsc(id);
+
+        // Delete each physical file
+        for (Photo photo : photos) {
+            // Extract filename from URL
+            String fileName = photo.getUrl().substring(photo.getUrl().lastIndexOf("/") + 1);
+            fileStorageService.deleteFile(fileName);
+        }
+
+        // Delete photo records from database
         photoRepository.deleteByPropertyId(id);
 
-        // Then delete the property
+        // Delete the property
         propertyRepository.deleteById(id);
     }
-
     public List<PropertyDTO> getPropertiesByAdminId(Long adminId) {
         return propertyRepository.findByAdminId(adminId).stream()
                 .map(this::convertToDTO)
