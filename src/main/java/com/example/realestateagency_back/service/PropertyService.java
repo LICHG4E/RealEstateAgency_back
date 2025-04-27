@@ -70,6 +70,7 @@ public class PropertyService {
                 .orElseThrow(() -> new ResourceNotFoundException("Property not found with id " + id));
 
         // Update fields
+        existingProperty.setTitle(propertyDTO.getTitle());
         existingProperty.setArea(propertyDTO.getArea());
         existingProperty.setRooms(propertyDTO.getRooms());
         existingProperty.setLocation(propertyDTO.getLocation());
@@ -174,6 +175,7 @@ public class PropertyService {
     private Property convertToEntity(PropertyDTO dto) {
         return Property.builder()
                 .id(dto.getId())
+                .title(dto.getTitle())
                 .area(dto.getArea())
                 .rooms(dto.getRooms())
                 .location(dto.getLocation())

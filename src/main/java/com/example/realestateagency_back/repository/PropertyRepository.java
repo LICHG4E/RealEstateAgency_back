@@ -37,6 +37,9 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findByAreaLessThanEqual(Double maxArea);
     List<Property> findByAreaGreaterThanEqual(Double minArea);
 
+    // find by title
+    List<Property> findByTitleContaining(String title);
+
     // Combined search criteria
     @Query("SELECT p FROM Property p WHERE " +
             "(:title IS NULL OR p.title LIKE %:title%) AND " +
