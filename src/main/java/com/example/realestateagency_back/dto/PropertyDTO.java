@@ -15,11 +15,12 @@ import java.util.List;
 public class PropertyDTO {
     private Long id;
     private Double area;
+    private String title;
     private Integer rooms;
     private String location;
     private BigDecimal price;
     private String description;
-    private String contactInfo;
+    private String contact;
     private String status;
     private Property.PropertyType type;
     private Property.ListingType listingType;

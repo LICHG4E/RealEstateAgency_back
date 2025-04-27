@@ -24,11 +24,13 @@ public class Property {
     private Integer rooms;
     private String location;
     private BigDecimal price;
+    private String title;
+
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String contactInfo;
+    private String contact;
 
     private String status;
 

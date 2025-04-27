@@ -39,6 +39,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     // Combined search criteria
     @Query("SELECT p FROM Property p WHERE " +
+            "(:title IS NULL OR p.title LIKE %:title%) AND " +
             "(:location IS NULL OR p.location LIKE %:location%) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
@@ -49,6 +50,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "(:listingType IS NULL OR p.listingType = :listingType) AND " +
             "(:status IS NULL OR p.status = :status)")
     List<Property> findByCriteria(
+            @Param("title") String title,
             @Param("location") String location,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
@@ -62,6 +64,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     // Same as above but with pagination
     @Query("SELECT p FROM Property p WHERE " +
+            "(:title IS NULL OR p.title LIKE %:title%) AND " +
             "(:location IS NULL OR p.location LIKE %:location%) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
@@ -72,6 +75,7 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "(:listingType IS NULL OR p.listingType = :listingType) AND " +
             "(:status IS NULL OR p.status = :status)")
     Page<Property> findByCriteria(
+            @Param("title") String title,
             @Param("location") String location,
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,

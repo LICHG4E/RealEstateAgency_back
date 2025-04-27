@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropertySearchCriteriaDTO {
+    private String title;
     private String location;
     private BigDecimal minPrice;
     private BigDecimal maxPrice;

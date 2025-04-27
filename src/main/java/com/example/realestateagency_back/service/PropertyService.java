@@ -75,7 +75,7 @@ public class PropertyService {
         existingProperty.setLocation(propertyDTO.getLocation());
         existingProperty.setPrice(propertyDTO.getPrice());
         existingProperty.setDescription(propertyDTO.getDescription());
-        existingProperty.setContactInfo(propertyDTO.getContactInfo());
+        existingProperty.setContact(propertyDTO.getContact());
         existingProperty.setStatus(propertyDTO.getStatus());
         existingProperty.setType(propertyDTO.getType());
         existingProperty.setListingType(propertyDTO.getListingType());
@@ -127,6 +127,7 @@ public class PropertyService {
 
     public List<PropertyDTO> searchProperties(PropertySearchCriteriaDTO criteria) {
         return propertyRepository.findByCriteria(
+                        criteria.getTitle(),
                         criteria.getLocation(),
                         criteria.getMinPrice(),
                         criteria.getMaxPrice(),
@@ -145,12 +146,13 @@ public class PropertyService {
     private PropertyDTO convertToDTO(Property property) {
         PropertyDTO dto = PropertyDTO.builder()
                 .id(property.getId())
+                .title(property.getTitle())
                 .area(property.getArea())
                 .rooms(property.getRooms())
                 .location(property.getLocation())
                 .price(property.getPrice())
                 .description(property.getDescription())
-                .contactInfo(property.getContactInfo())
+                .contact(property.getContact())
                 .status(property.getStatus())
                 .type(property.getType())
                 .listingType(property.getListingType())
@@ -176,7 +178,7 @@ public class PropertyService {
                 .location(dto.getLocation())
                 .price(dto.getPrice())
                 .description(dto.getDescription())
-                .contactInfo(dto.getContactInfo())
+                .contact(dto.getContact())
                 .status(dto.getStatus())
                 .type(dto.getType())
                 .listingType(dto.getListingType())

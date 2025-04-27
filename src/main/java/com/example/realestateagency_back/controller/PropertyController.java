@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/properties")
+@RequestMapping("/api/annonces")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class PropertyController {
