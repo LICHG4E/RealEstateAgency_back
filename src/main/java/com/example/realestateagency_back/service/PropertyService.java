@@ -1,5 +1,6 @@
 package com.example.realestateagency_back.service;
 
+import com.example.realestateagency_back.dto.PhotoDTO;
 import com.example.realestateagency_back.dto.PropertyDTO;
 import com.example.realestateagency_back.dto.PropertySearchCriteriaDTO;
 import com.example.realestateagency_back.entity.Admin;
@@ -55,8 +56,13 @@ public class PropertyService {
 
         // Save photos if present
         if (propertyDTO.getPhotos() != null && !propertyDTO.getPhotos().isEmpty()) {
-            for (Photo photo : propertyDTO.getPhotos()) {
-                photo.setProperty(savedProperty);
+            for (PhotoDTO photoDTO : propertyDTO.getPhotos()) {
+                // Convert PhotoDTO to Photo entity
+                Photo photo = Photo.builder()
+                        .url(photoDTO.getUrl())
+                        .order(photoDTO.getOrder())
+                        .property(savedProperty)
+                        .build();
                 photoRepository.save(photo);
             }
         }
@@ -86,12 +92,17 @@ public class PropertyService {
 
         // Update photos if needed
         if (propertyDTO.getPhotos() != null) {
-            // This would typically be more complex, handling removed photos, order changes, etc.
-            // Here's a simple implementation that replaces all photos
+            // Delete existing photos
             photoRepository.deleteByPropertyId(id);
 
-            for (Photo photo : propertyDTO.getPhotos()) {
-                photo.setProperty(updatedProperty);
+            // Add new photos
+            for (PhotoDTO photoDTO : propertyDTO.getPhotos()) {
+                // Convert PhotoDTO to Photo entity
+                Photo photo = Photo.builder()
+                        .url(photoDTO.getUrl())
+                        .order(photoDTO.getOrder())
+                        .property(updatedProperty)
+                        .build();
                 photoRepository.save(photo);
             }
         }
@@ -165,9 +176,19 @@ public class PropertyService {
                 .updatedAt(property.getUpdatedAt())
                 .build();
 
-        // Fetch photos for the property
+        // Fetch photos for the property and convert to DTOs
         List<Photo> photos = photoRepository.findByPropertyIdOrderByOrderAsc(property.getId());
-        dto.setPhotos(photos);
+        List<PhotoDTO> photoDTOs = photos.stream()
+                .map(photo -> PhotoDTO.builder()
+                        .id(photo.getId())
+                        .url(photo.getUrl())
+                        .order(photo.getOrder())
+                        .propertyId(property.getId())
+                        .createdAt(photo.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
+
+        dto.setPhotos(photoDTOs);
 
         return dto;
     }

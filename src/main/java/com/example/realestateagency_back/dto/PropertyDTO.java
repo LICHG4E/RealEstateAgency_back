@@ -29,5 +29,5 @@ public class PropertyDTO {
     private LocalDateTime publicationDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<Photo> photos; // For simplified photo representation
+    private List<PhotoDTO> photos; // For simplified photo representation
 }

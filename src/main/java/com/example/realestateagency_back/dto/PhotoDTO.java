@@ -1,5 +1,6 @@
 package com.example.realestateagency_back.dto;
 
+import com.example.realestateagency_back.entity.Property;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -14,4 +15,8 @@ public class PhotoDTO {
     private Integer order;
     private Long propertyId;
     private LocalDateTime createdAt;
+
+    public void setProperty(Property savedProperty) {
+
+    }
 }
