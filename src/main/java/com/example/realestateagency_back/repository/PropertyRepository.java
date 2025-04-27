@@ -45,7 +45,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
             "(:minArea IS NULL OR p.area >= :minArea) AND " +
             "(:maxArea IS NULL OR p.area <= :maxArea) AND " +
-            "(:rooms IS NULL OR p.rooms = :rooms) AND " +
+            "(:minRooms IS NULL OR p.rooms >= :minRooms) AND " +
+            "(:maxRooms IS NULL OR p.rooms <= :maxRooms) AND " +
             "(:type IS NULL OR p.type = :type) AND " +
             "(:listingType IS NULL OR p.listingType = :listingType) AND " +
             "(:status IS NULL OR p.status = :status)")
@@ -56,7 +57,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("minArea") Double minArea,
             @Param("maxArea") Double maxArea,
-            @Param("rooms") Integer rooms,
+            @Param("minRooms") Integer minRooms,
+            @Param("maxRooms") Integer maxRooms,
             @Param("type") Property.PropertyType type,
             @Param("listingType") Property.ListingType listingType,
             @Param("status") String status
@@ -70,7 +72,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
             "(:minArea IS NULL OR p.area >= :minArea) AND " +
             "(:maxArea IS NULL OR p.area <= :maxArea) AND " +
-            "(:rooms IS NULL OR p.rooms = :rooms) AND " +
+            "(:minRooms IS NULL OR p.rooms >= :minRooms) AND " +
+            "(:maxRooms IS NULL OR p.rooms <= :maxRooms) AND " +
             "(:type IS NULL OR p.type = :type) AND " +
             "(:listingType IS NULL OR p.listingType = :listingType) AND " +
             "(:status IS NULL OR p.status = :status)")
@@ -81,7 +84,8 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("minArea") Double minArea,
             @Param("maxArea") Double maxArea,
-            @Param("rooms") Integer rooms,
+            @Param("minRooms") Integer minRooms,
+            @Param("maxRooms") Integer maxRooms,
             @Param("type") Property.PropertyType type,
             @Param("listingType") Property.ListingType listingType,
             @Param("status") String status,

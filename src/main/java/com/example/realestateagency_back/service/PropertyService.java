@@ -133,7 +133,8 @@ public class PropertyService {
                         criteria.getMaxPrice(),
                         criteria.getMinArea(),
                         criteria.getMaxArea(),
-                        criteria.getRooms(),
+                        criteria.getMinRooms(),
+                        criteria.getMaxRooms(),
                         criteria.getType(),
                         criteria.getListingType(),
                         "ACTIVE" // Default to active properties for search

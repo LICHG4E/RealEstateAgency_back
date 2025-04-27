@@ -16,7 +16,8 @@ public class PropertySearchCriteriaDTO {
     private BigDecimal maxPrice;
     private Double minArea;
     private Double maxArea;
-    private Integer rooms;
+    private Integer maxRooms;
+    private Integer minRooms;
     private Property.PropertyType type;
     private Property.ListingType listingType;
 }
