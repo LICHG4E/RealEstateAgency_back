@@ -17,6 +17,5 @@ public class PhotoDTO {
     private LocalDateTime createdAt;
 
     public void setProperty(Property savedProperty) {
-
     }
 }

@@ -11,6 +11,7 @@ import com.example.realestateagency_back.repository.AdminRepository;
 import com.example.realestateagency_back.repository.PropertyRepository;
 import com.example.realestateagency_back.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PropertyService {
 
     private final PropertyRepository propertyRepository;
@@ -28,19 +30,28 @@ public class PropertyService {
     private final FileStorageService fileStorageService;
 
     public List<PropertyDTO> getAllProperties() {
-        return propertyRepository.findAll().stream()
+        log.info("Fetching all properties");
+        List<PropertyDTO> properties = propertyRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+        log.debug("Found {} properties", properties.size());
+        return properties;
     }
 
     public PropertyDTO getPropertyById(Long id) {
+        log.info("Fetching property with id: {}", id);
         Property property = propertyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Property not found with id " + id));
+                .orElseThrow(() -> {
+                    log.error("Property not found with id: {}", id);
+                    return new ResourceNotFoundException("Property not found with id " + id);
+                });
+        log.debug("Property found with id: {}", id);
         return convertToDTO(property);
     }
 
     @Transactional
     public PropertyDTO createProperty(PropertyDTO propertyDTO) {
+        log.info("Creating new property with title: {}", propertyDTO.getTitle());
         Property property = convertToEntity(propertyDTO);
 
         // Set publication date and status
@@ -48,14 +59,20 @@ public class PropertyService {
         property.setStatus(propertyDTO.getStatus() != null ? propertyDTO.getStatus() : "ACTIVE");
 
         // Set admin
+        log.debug("Fetching admin with id: {}", propertyDTO.getAdminId());
         Admin admin = adminRepository.findById(propertyDTO.getAdminId())
-                .orElseThrow(() -> new ResourceNotFoundException("Admin not found with id " + propertyDTO.getAdminId()));
+                .orElseThrow(() -> {
+                    log.error("Admin not found with id: {}", propertyDTO.getAdminId());
+                    return new ResourceNotFoundException("Admin not found with id " + propertyDTO.getAdminId());
+                });
         property.setAdmin(admin);
 
         Property savedProperty = propertyRepository.save(property);
+        log.debug("Property created successfully with id: {}", savedProperty.getId());
 
         // Save photos if present
         if (propertyDTO.getPhotos() != null && !propertyDTO.getPhotos().isEmpty()) {
+            log.debug("Adding {} photos to property", propertyDTO.getPhotos().size());
             for (PhotoDTO photoDTO : propertyDTO.getPhotos()) {
                 // Convert PhotoDTO to Photo entity
                 Photo photo = Photo.builder()
@@ -65,6 +82,7 @@ public class PropertyService {
                         .build();
                 photoRepository.save(photo);
             }
+            log.debug("Photos added successfully to property: {}", savedProperty.getId());
         }
 
         return convertToDTO(savedProperty);
@@ -72,8 +90,12 @@ public class PropertyService {
 
     @Transactional
     public PropertyDTO updateProperty(Long id, PropertyDTO propertyDTO) {
+        log.info("Updating property with id: {}", id);
         Property existingProperty = propertyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Property not found with id " + id));
+                .orElseThrow(() -> {
+                    log.error("Property not found with id: {}", id);
+                    return new ResourceNotFoundException("Property not found with id " + id);
+                });
 
         // Update fields
         existingProperty.setTitle(propertyDTO.getTitle());
@@ -89,13 +111,13 @@ public class PropertyService {
         existingProperty.setUpdatedAt(LocalDateTime.now());
 
         Property updatedProperty = propertyRepository.save(existingProperty);
+        log.debug("Property basic information updated successfully with id: {}", updatedProperty.getId());
 
-        // Update photos if needed
         if (propertyDTO.getPhotos() != null) {
-            // Delete existing photos
+            log.debug("Updating photos for property with id: {}", id);
             photoRepository.deleteByPropertyId(id);
+            log.debug("Old photos deleted for property with id: {}", id);
 
-            // Add new photos
             for (PhotoDTO photoDTO : propertyDTO.getPhotos()) {
                 // Convert PhotoDTO to Photo entity
                 Photo photo = Photo.builder()
@@ -105,37 +127,55 @@ public class PropertyService {
                         .build();
                 photoRepository.save(photo);
             }
+            log.debug("New photos added for property with id: {}", id);
         }
 
+        log.info("Property updated successfully with id: {}", updatedProperty.getId());
         return convertToDTO(updatedProperty);
     }
+
     @Transactional
     public void deleteProperty(Long id) {
+        log.info("Deleting property with id: {}", id);
         if (!propertyRepository.existsById(id)) {
+            log.error("Property not found with id: {}", id);
             throw new ResourceNotFoundException("Property not found with id " + id);
         }
 
         List<Photo> photos = photoRepository.findByPropertyIdOrderByOrderAsc(id);
+        log.debug("Found {} photos to delete for property with id: {}", photos.size(), id);
 
         for (Photo photo : photos) {
             String fileName = photo.getUrl().substring(photo.getUrl().lastIndexOf("/") + 1);
+            log.debug("Deleting photo file: {}", fileName);
             fileStorageService.deleteFile(fileName);
         }
 
         // Delete photo records from database
+        log.debug("Deleting photo records from database for property with id: {}", id);
         photoRepository.deleteByPropertyId(id);
 
         // Delete the property
+        log.debug("Deleting property record with id: {}", id);
         propertyRepository.deleteById(id);
+        log.info("Property deleted successfully with id: {}", id);
     }
+
     public List<PropertyDTO> getPropertiesByAdminId(Long adminId) {
-        return propertyRepository.findByAdminId(adminId).stream()
+        log.info("Fetching properties for admin with id: {}", adminId);
+        List<PropertyDTO> properties = propertyRepository.findByAdminId(adminId).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+        log.debug("Found {} properties for admin with id: {}", properties.size(), adminId);
+        return properties;
     }
 
     public List<PropertyDTO> searchProperties(PropertySearchCriteriaDTO criteria) {
-        return propertyRepository.findByCriteria(
+        log.info("Searching properties with criteria: location={}, price range={}-{}, area range={}-{}, rooms range={}-{}",
+                criteria.getLocation(), criteria.getMinPrice(), criteria.getMaxPrice(),
+                criteria.getMinArea(), criteria.getMaxArea(), criteria.getMinRooms(), criteria.getMaxRooms());
+
+        List<PropertyDTO> results = propertyRepository.findByCriteria(
                         criteria.getTitle(),
                         criteria.getLocation(),
                         criteria.getMinPrice(),
@@ -150,9 +190,11 @@ public class PropertyService {
                 ).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+
+        log.debug("Search returned {} results", results.size());
+        return results;
     }
 
-    // Helper methods to convert between entity and DTO
     private PropertyDTO convertToDTO(Property property) {
         PropertyDTO dto = PropertyDTO.builder()
                 .id(property.getId())

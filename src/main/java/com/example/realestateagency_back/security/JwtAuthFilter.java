@@ -47,7 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             UserDetails userDetails = customUserDetailsService.loadUserByEmail(userEmail, userType);
 
             if (jwtUtils.isTokenValid(jwt, userDetails)) {
-                // This is the key change - add authority based on userType
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
