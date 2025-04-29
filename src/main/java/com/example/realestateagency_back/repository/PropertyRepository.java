@@ -16,29 +16,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
 
     // Find by admin
     List<Property> findByAdminId(Long adminId);
-    Page<Property> findByAdminId(Long adminId, Pageable pageable);
-
-    // Find by property characteristics
-    List<Property> findByType(Property.PropertyType type);
-    List<Property> findByListingType(Property.ListingType listingType);
-    List<Property> findByStatus(String status);
-    List<Property> findByRooms(Integer rooms);
-
-    // Location-based search (with LIKE for partial matches)
-    List<Property> findByLocationContaining(String location);
-
-    // Price-range searches
-    List<Property> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
-    List<Property> findByPriceLessThanEqual(BigDecimal maxPrice);
-    List<Property> findByPriceGreaterThanEqual(BigDecimal minPrice);
-
-    // Area-range searches
-    List<Property> findByAreaBetween(Double minArea, Double maxArea);
-    List<Property> findByAreaLessThanEqual(Double maxArea);
-    List<Property> findByAreaGreaterThanEqual(Double minArea);
-
-    // find by title
-    List<Property> findByTitleContaining(String title);
 
     // Combined search criteria
     @Query("SELECT p FROM Property p WHERE " +
@@ -95,6 +72,4 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
             Pageable pageable
     );
 
-    // Count properties by admin
-    long countByAdminId(Long adminId);
 }

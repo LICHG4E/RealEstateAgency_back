@@ -76,12 +76,4 @@ public class AuthService {
         }
     }
 
-    public String determineUserType(String email) {
-        if (adminRepository.existsByEmail(email)) {
-            return "ADMIN";
-        } else if (userRepository.existsByEmail(email)) {
-            return "USER";
-        }
-        return null;
-    }
 }

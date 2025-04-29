@@ -115,12 +115,9 @@ public class PropertyService {
             throw new ResourceNotFoundException("Property not found with id " + id);
         }
 
-        // Get all photos for this property
         List<Photo> photos = photoRepository.findByPropertyIdOrderByOrderAsc(id);
 
-        // Delete each physical file
         for (Photo photo : photos) {
-            // Extract filename from URL
             String fileName = photo.getUrl().substring(photo.getUrl().lastIndexOf("/") + 1);
             fileStorageService.deleteFile(fileName);
         }
@@ -149,7 +146,7 @@ public class PropertyService {
                         criteria.getMaxRooms(),
                         criteria.getType(),
                         criteria.getListingType(),
-                        "ACTIVE" // Default to active properties for search
+                        "ACTIVE"
                 ).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

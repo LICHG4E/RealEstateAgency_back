@@ -92,16 +92,12 @@ public class PhotoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePhoto(@PathVariable Long id) {
-        // Get the photo first to retrieve the file name
         PhotoDTO photo = photoService.getPhotoById(id);
 
-        // Extract file name from URL
         String fileName = photo.getUrl().substring(photo.getUrl().lastIndexOf("/") + 1);
 
-        // Delete the file
         fileStorageService.deleteFile(fileName);
 
-        // Delete the database record
         photoService.deletePhoto(id);
 
         return ResponseEntity.noContent().build();
